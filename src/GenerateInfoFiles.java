@@ -44,6 +44,51 @@ public static void createProductsFile(int cantidadProductos) {
             System.out.println("productos.csv generado.");
         } catch (IOException e) {
             System.out.println("Error al generar productos.csv: " + e.getMessage());
-        }
+      public static void createSalesManInfoFile(int cantidadVendedores) { 
+         ensureDataFolderExists(); 
+         String fileName = DATA_FOLDER + "vendedores.csv"; 
+  
+        String[] nombres = {"María", "Carlos", "Ana", "Luis", "Sofía", "Javier", "Camila", "Pedro", "Laura", "Andrés"}; 
+         String[] apellidos = {"Pérez", "Gómez", "Rodríguez", "Fernández", "López", "Martínez", "Sánchez", "Ramírez", "Torres", "Vargas"}; 
+  
+        try (FileWriter writer = new FileWriter(fileName)) { 
+             Random random = new Random(); 
+             Set<String> idsGenerados = new HashSet<>(); 
+  
+            for (int i = 0; i < cantidadVendedores; i++) { 
+                 String idVendedor; 
+                 do { 
+                     idVendedor = String.valueOf(10000 + random.nextInt(90000)); 
+                 } while (!idsGenerados.add(idVendedor)); 
+  
+                String nombreCompleto = nombres[random.nextInt(nombres.length)] + " " + apellidos[random.nextInt(apellidos.length)]; 
+                 writer.write(idVendedor + ";" + nombreCompleto + "\n"); 
+             } 
+             System.out.println("vendedores.csv generado."); 
+         } catch (IOException e) { 
+             System.out.println("Error al generar vendedores.csv: " + e.getMessage()); 
+         } 
+     } 
+  
+    public static Map<String, Integer> cargarProductos() { 
+         Map<String, Integer> productos = new HashMap<>(); 
+         String filePath = DATA_FOLDER + "productos.csv"; 
+  
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) { 
+             String line; 
+             while ((line = br.readLine()) != null) { 
+                 String[] parts = line.split(";"); 
+                 if (parts.length == 3) { 
+                     String idProducto = parts[0]; 
+                     int precio = Integer.parseInt(parts[2]); 
+                     productos.put(idProducto, precio); 
+                 } 
+             } 
+         } catch (IOException e) { 
+             System.out.println("Error al leer productos.csv: " + e.getMessage()); 
+         } 
+         return productos; 
+     } 
+  }
     }
 

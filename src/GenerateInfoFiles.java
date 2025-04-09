@@ -92,3 +92,34 @@ public static void createProductsFile(int cantidadProductos) {
   }
     }
 
+    public static void createSalesMenFile(int ventasAleatorias, String nombre, long id) {
+        ensureDataFolderExists();
+        String fileName = DATA_FOLDER + "ventas_" + id + ".csv";
+
+        Random random = new Random();
+        Map<String, Integer> productos = cargarProductos();
+
+        if (productos.isEmpty()) {
+            System.out.println("No hay productos para generar ventas.");
+            return;
+        }
+
+        try (FileWriter writer = new FileWriter(fileName)) {
+            List<String> keys = new ArrayList<>(productos.keySet());
+
+            for (int i = 0; i < ventasAleatorias; i++) {
+                String idProducto = keys.get(random.nextInt(keys.size()));
+                int cantidad = random.nextInt(5) + 1;
+                int precio = productos.get(idProducto);
+                int total = cantidad * precio;
+
+                writer.write(idProducto + ";" + cantidad + ";" + total + "\n");
+            }
+            System.out.println("ventas_" + id + ".csv generado.");
+        } catch (IOException e) {
+            System.out.println("Error al generar ventas para vendedor " + id + ": " + e.getMessage());
+        }
+    }
+}
+
+
